@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Official LlamaIndex reader for the WellMarked API — load any URL as clean Markdown."
 readme = "README.md"
 license = { text = "MIT" }
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 authors = [
     { name = "WellMarked", email = "support@wellmarked.io" },
 ]
