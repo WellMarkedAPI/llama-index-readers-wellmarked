@@ -1,0 +1,56 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "llama-index-readers-wellmarked"
+version = "0.1.0"
+description = "Official LlamaIndex reader for the WellMarked API — load any URL as clean Markdown."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [
+    { name = "WellMarked", email = "support@wellmarked.io" },
+]
+keywords = ["wellmarked", "llama-index", "reader", "markdown", "scraping", "rag", "llm"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = [
+    "llama-index-core>=0.12,<0.15",
+    "wellmarked>=1.1,<2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7",
+]
+
+[project.urls]
+Homepage = "https://wellmarked.io"
+Documentation = "https://wellmarked.io/docs"
+Source = "https://github.com/WellMarkedAPI/llama-index-readers-wellmarked"
+Issues = "https://github.com/WellMarkedAPI/llama-index-readers-wellmarked/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["llama_index"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "llama_index",
+    "README.md",
+    "LICENSE",
+    "pyproject.toml",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
