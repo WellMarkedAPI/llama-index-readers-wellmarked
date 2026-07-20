@@ -41,6 +41,11 @@ class WellMarkedReader(BasePydanticReader):
         >>> reader = WellMarkedReader(mode="crawl", depth=2)
         >>> docs = reader.load_data("https://docs.example.com")
 
+        Retrieve from the live web by query (search + extract, Pro plan and above):
+
+        >>> reader = WellMarkedReader(num_results=5)
+        >>> docs = reader.search("best open-source vector databases")
+
     In ``crawl`` mode the reader blocks until the crawl job finishes
     (up to ``job_timeout`` seconds) and returns only successfully
     extracted pages; failed pages (timeouts, robots-disallowed) are
@@ -64,6 +69,9 @@ class WellMarkedReader(BasePydanticReader):
     depth: int = 1
     render_js: bool = False
     job_timeout: Optional[float] = 300.0
+    # Used by search(), not load_data(). How many results to fetch + extract;
+    # clamped to 1..10 server-side.
+    num_results: int = 5
 
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
@@ -105,3 +113,29 @@ class WellMarkedReader(BasePydanticReader):
                     )
                 )
             return docs
+
+    def search(self, query: str) -> List[Document]:
+        """Search the web and return the extracted result pages as Documents.
+
+        Unlike :meth:`load_data`, this takes a *query* rather than a URL: it
+        searches the web and extracts the top ``num_results`` results in one
+        round trip. Only successfully extracted results are returned; a page
+        that timed out or was blocked is skipped. Requires a Pro plan or above
+        (search is a paid feature).
+        """
+        with WellMarked(api_key=self.api_key) as wm:
+            results = wm.search(
+                query, num_results=self.num_results, render_js=self.render_js,
+            ).results
+
+        docs: List[Document] = []
+        for r in results:
+            if not r.ok or not r.markdown:
+                continue
+            metadata: dict[str, Any] = {"source": r.url}
+            if r.title:
+                metadata["title"] = r.title
+            if r.snippet:
+                metadata["snippet"] = r.snippet
+            docs.append(Document(text=r.markdown, metadata=metadata))
+        return docs
