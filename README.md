@@ -1,6 +1,6 @@
 # llama-index-readers-wellmarked
 
-The official [LlamaIndex](https://www.llamaindex.ai/) reader for **[WellMarked](https://wellmarked.io)** — load any URL as clean Markdown `Document`s.
+The official [LlamaIndex](https://www.llamaindex.ai/) reader for **[WellMarked](https://wellmarked.io)** — load any URL as clean Markdown `Document`s, or pull them straight from a web search.
 
 ```bash
 pip install llama-index-readers-wellmarked
@@ -35,6 +35,16 @@ docs = reader.load_data("https://docs.example.com")
 docs[0].metadata["depth"]   # how far from the root URL this page sits
 ```
 
+Or search the web and load the results by query instead of a URL — search plus extraction in one round trip (Pro plan and above):
+
+```python
+reader = WellMarkedReader(num_results=5)
+docs = reader.search("best open-source vector databases")
+
+docs[0].text                 # clean Markdown of a result page
+docs[0].metadata             # {"source": ..., "title": ..., "snippet": ...}
+```
+
 Drop the documents straight into an index:
 
 ```python
@@ -45,7 +55,7 @@ index = VectorStoreIndex.from_documents(docs)
 
 ## Options
 
-All options are constructor arguments; `load_data(url)` takes only the URL.
+All options are constructor arguments. `load_data(url)` takes a URL (extract/crawl); `search(query)` takes a query.
 
 | Parameter     | Default     | Description                                                        |
 |---------------|-------------|--------------------------------------------------------------------|
@@ -54,8 +64,9 @@ All options are constructor arguments; `load_data(url)` takes only the URL.
 | `depth`       | `1`         | Crawl depth (`mode="crawl"` only)                                   |
 | `render_js`   | `False`     | Render JS-heavy pages with a headless browser (Pro and above)       |
 | `job_timeout` | `300.0`     | Seconds to wait for a crawl job; `None` waits forever               |
+| `num_results` | `5`         | Results to fetch + extract for `search()` (clamped to 1..10)        |
 
-In `crawl` mode, pages that fail to extract (timeouts, robots-disallowed, no content) are skipped; only successful pages become `Document`s.
+In `crawl` mode, pages that fail to extract (timeouts, robots-disallowed, no content) are skipped; only successful pages become `Document`s — the same applies to `search()`.
 
 ## Related
 
