@@ -64,7 +64,7 @@ All options are constructor arguments. `load_data(url)` takes a URL (extract/cra
 | `depth`       | `1`         | Crawl depth (`mode="crawl"` only)                                   |
 | `render_js`   | `False`     | Render JS-heavy pages with a headless browser (Pro and above)       |
 | `job_timeout` | `300.0`     | Seconds to wait for a crawl job; `None` waits forever               |
-| `num_results` | `5`         | Results to fetch + extract for `search()` (clamped to 1..10)        |
+| `num_results` | `5`         | Results to fetch + extract for `search()` (capped by plan: Free 5 · Pro 10 · Growth 50 · Enterprise uncapped) |
 
 In `crawl` mode, pages that fail to extract (timeouts, robots-disallowed, no content) are skipped; only successful pages become `Document`s — the same applies to `search()`.
 
