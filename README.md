@@ -71,5 +71,6 @@ In `crawl` mode, pages that fail to extract (timeouts, robots-disallowed, no con
 ## Related
 
 - [`wellmarked`](https://pypi.org/project/wellmarked/) — the underlying Python SDK (this package wraps it)
+- [LlamaIndex integration docs](https://wellmarked.io/docs/sdks/llamaindex) — this package, on the WellMarked docs site
 - [WellMarked API docs](https://wellmarked.io/docs)
 - [`langchain-wellmarked`](https://github.com/WellMarkedAPI/langchain-wellmarked) — the LangChain equivalent
